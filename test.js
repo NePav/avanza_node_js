@@ -1,4 +1,4 @@
-const fs = require('fs');                                                                             
+const fs = require('fs');                                                                              
    const dotenv = require('dotenv');                                                                     
    const Avanza = require('avanza/dist/index.js');                                                       
                                                                                                          
