@@ -1,3 +1,3 @@
 # avanza_node_js
 
-pip install avanza
+npm install avanza
