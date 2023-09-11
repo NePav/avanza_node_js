@@ -1,0 +1,100 @@
+<!DOCTYPE html>                                                                                                                                                                                 
+   <html>                                                                                                                                                                                          
+   <head>                                                                                                                                                                                          
+   <title>Avanza Node</title>                                                                                                                                                                      
+   <link id="theme-link" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">                                                                         
+   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">                                                                                      
+   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">                                                                          
+   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/colreorder/1.5.4/css/colReorder.dataTables.min.css">                                                                    
+   <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>                                                                                           
+   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>                                                                         
+   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>                                                             
+   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>                                                                 
+   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/colreorder/1.5.4/js/dataTables.colReorder.min.js"></script>                                                       
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>                                                                                               
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>                                                                                                  
+   </head>                                                                                                                                                                                         
+   <body class="container">                                                                                                                                                                        
+   <h1 class="my-4">Avanza Node</h1>                                                                                                                                                               
+   <div class="dropdown mb-4">                                                                                                                                                                     
+     <button class="btn btn-secondary dropdown-toggle" type="button" id="themeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                                         
+       Select Theme                                                                                                                                                                                
+     </button>                                                                                                                                                                                     
+     <div class="dropdown-menu" aria-labelledby="themeDropdown">                                                                                                                                   
+       <a class="dropdown-item" href="#" data-theme="default">Default</a>                                                                                                                          
+       <a class="dropdown-item" href="#" data-theme="cerulean">Cerulean</a>                                                                                                                        
+       <a class="dropdown-item" href="#" data-theme="cosmo">Cosmo</a>                                                                                                                              
+       <a class="dropdown-item" href="#" data-theme="cyborg">Cyborg</a>                                                                                                                            
+       <a class="dropdown-item" href="#" data-theme="darkly">Darkly</a>                                                                                                                            
+       <a class="dropdown-item" href="#" data-theme="flatly">Flatly</a>                                                                                                                            
+       <a class="dropdown-item" href="#" data-theme="journal">Journal</a>                                                                                                                          
+       <a class="dropdown-item" href="#" data-theme="litera">Litera</a>                                                                                                                            
+       <a class="dropdown-item" href="#" data-theme="lumen">Lumen</a>                                                                                                                              
+       <a class="dropdown-item" href="#" data-theme="lux">Lux</a>                                                                                                                                  
+       <a class="dropdown-item" href="#" data-theme="materia">Materia</a>                                                                                                                          
+       <a class="dropdown-item" href="#" data-theme="minty">Minty</a>                                                                                                                              
+       <a class="dropdown-item" href="#" data-theme="pulse">Pulse</a>                                                                                                                              
+       <a class="dropdown-item" href="#" data-theme="sandstone">Sandstone</a>                                                                                                                      
+       <a class="dropdown-item" href="#" data-theme="simplex">Simplex</a>                                                                                                                          
+       <a class="dropdown-item" href="#" data-theme="sketchy">Sketchy</a>                                                                                                                          
+       <a class="dropdown-item" href="#" data-theme="slate">Slate</a>                                                                                                                              
+       <a class="dropdown-item" href="#" data-theme="solar">Solar</a>                                                                                                                              
+       <a class="dropdown-item" href="#" data-theme="spacelab">Spacelab</a>                                                                                                                        
+       <a class="dropdown-item" href="#" data-theme="superhero">Superhero</a>                                                                                                                      
+     </div>                                                                                                                                                                                        
+   </div>                                                                                                                                                                                          
+   <button id="login" class="btn btn-primary">Login</button>                                                                                                                                       
+   <button id="get-positions" class="btn btn-secondary" disabled>Get Positions</button>                                                                                                            
+   <div style="overflow-x: auto;"><table id="positions" class="display table table-striped mt-4">                                                                                                                                 
+   <thead>                                                                                                                                                                                         
+   <tr>                                                                                                                                                                                            
+   <th>Account Name</th>                                                                                                                                                                           
+   <th>Account Type</th>                                                                                                                                                                           
+   <th>Depositable</th>                                                                                                                                                                            
+   <th>Account ID</th>                                                                                                                                                                             
+   <th>Volume</th>                                                                                                                                                                                 
+   <th>Profit</th>                                                                                                                                                                                 
+   <th>Profit Percent</th>                                                                                                                                                                         
+   <th>Average Acquired Price</th>                                                                                                                                                                 
+   <th>Acquired Value</th>                                                                                                                                                                         
+   <th>Value</th>                                                                                                                                                                                  
+   <th>Currency</th>                                                                                                                                                                               
+   <th>Orderbook ID</th>                                                                                                                                                                           
+   <th>Last Price</th>                                                                                                                                                                             
+   <th>Last Price Updated</th>                                                                                                                                                                     
+   <th>Change</th>                                                                                                                                                                                 
+   <th>Change Percent</th>                                                                                                                                                                         
+   <th>Tradable</th>                                                                                                                                                                               
+   <th>Name</th>                                                                                                                                                                                   
+   <th>Timestamp</th>                                                                                                                                                                              
+   </tr>                                                                                                                                                                                           
+   </thead>                                                                                                                                                                                        
+   <tbody>                                                                                                                                                                                         
+   </tbody>                                                                                                                                                                                        
+   </table></div>                                                                                                                                                                                        
+   <script src="app.js"></script>                                                                                                                                                                  
+   <script>                                                                                                                                                                                        
+   $(document).ready( function () {                                                                                                                                                                
+       var table = $('#positions').DataTable({                                                                                                                                                     
+           dom: 'Bfrtip',                                                                                                                                                                          
+           buttons: [                                                                                                                                                                              
+               'colvis'                                                                                                                                                                            
+           ],                                                                                                                                                                                      
+           colReorder: true,                                                                                                                                                                       
+           stateSave: true                                                                                                                                                                         
+       });                                                                                                                                                                                         
+                                                                                                                                                                                                   
+       var theme = localStorage.getItem('theme');                                                                                                                                                  
+       if (theme) {                                                                                                                                                                                
+           $('#theme-link').attr('href', 'https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/' + theme + '/bootstrap.min.css');                                                                   
+       }                                                                                                                                                                                           
+                                                                                                                                                                                                   
+       $('.dropdown-item').click(function() {                                                                                                                                                      
+           theme = $(this).data('theme');                                                                                                                                                          
+           $('#theme-link').attr('href', 'https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/' + theme + '/bootstrap.min.css');                                                                   
+           localStorage.setItem('theme', theme);                                                                                                                                                   
+       });                                                                                                                                                                                         
+   } );                                                                                                                                                                                            
+   </script>                                                                                                                                                                                       
+   </body>                                                                                                                                                                                         
+   </html>       
