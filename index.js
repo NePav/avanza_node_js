@@ -15,7 +15,7 @@ require('dotenv').config()
       await avanza.authenticate({                                                                       
         username: process.env.AVANZA_USERNAME,                                                          
         password: process.env.AVANZA_PASSWORD,                                                          
-        totpSecret: process.env.AVANZA_TOTP                                                             
+        totpSecret: process.env.AVANZA_TOTP_SECRET                                                             
       });                                                                                               
       console.log('Authenticated successfully.');                                                       
       console.log('Getting positions...');                                                              
@@ -44,7 +44,7 @@ app.post("/login", async (req, res) => {
     await avanza.authenticate({
       username: process.env.AVANZA_USERNAME,
       password: process.env.AVANZA_PASSWORD,
-      totpSecret: process.env.AVANZA_TOTP
+      totpSecret: process.env.AVANZA_TOTP_SECRET
     });
     res.sendStatus(200);
   } catch (error) {
