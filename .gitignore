@@ -3,3 +3,4 @@ node_modules/
 test.js
 positions.json
 .DS_Store
+Global_Inflation_Rates_*.csv

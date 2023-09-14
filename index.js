@@ -73,3 +73,18 @@ app.post('/extract-rates', async (req, res) => {
       res.status(500).send('Error extracting data.');
   }
 });
+
+const getLatestCSV = require('./gir');
+const parseCSVData = require('./gir');
+const convertToGeoJSON = require('./gir');
+
+app.get('/get-geojson-data', (req, res) => {
+  const latestCSV = getLatestCSV();
+  if (latestCSV) {
+      const data = parseCSVData(latestCSV);
+      const geoJsonData = convertToGeoJSON(data);
+      res.json(geoJsonData);
+  } else {
+      res.status(404).send('No CSV file found.');
+  }
+});

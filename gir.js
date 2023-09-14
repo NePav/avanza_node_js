@@ -55,5 +55,55 @@ async function extractInterestRates() {
     }
 }
 
+const path = require('path');
+const Papa = require('papaparse');
+
+// Function to get the latest CSV file
+function getLatestCSV() {
+  const files = fs.readdirSync('./'); // Assuming CSV files are in the root directory
+  const csvFiles = files.filter(file => file.startsWith('Global_Inflation_Rates_') && file.endsWith('.csv'));
+  csvFiles.sort((a, b) => fs.statSync(b).mtime.getTime() - fs.statSync(a).mtime.getTime());
+  return csvFiles[0] ? path.join('./', csvFiles[0]) : null;
+}
+
+// Function to parse the CSV data
+function parseCSVData(file) {
+  const csvData = fs.readFileSync(file, 'utf8');
+  return Papa.parse(csvData, { header: true }).data;
+}
+
+function convertToGeoJSON(data) {
+    const geoJsonData = {
+        type: 'FeatureCollection',
+        features: []
+    };
+
+    // Iterate through your CSV data and create GeoJSON features
+    data.forEach(row => {
+        // Replace 'Latitude' and 'Longitude' with your actual column names if needed
+        const latitude = parseFloat(row['Latitude']);
+        const longitude = parseFloat(row['Longitude']);
+
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+            const feature = {
+                type: 'Feature',
+                properties: {
+                    country: row['Country/Region'],
+                    currentRate: parseFloat(row['Current Rate']),
+                    previousRate: parseFloat(row['Previous Rate'])
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [longitude, latitude]
+                }
+            };
+            geoJsonData.features.push(feature);
+        }
+    });
+
+    return geoJsonData;
+}
+
+
 module.exports = extractInterestRates;
 

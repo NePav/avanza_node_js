@@ -54,3 +54,37 @@ document.getElementById('extractInterestRates').addEventListener('click', async 
         alert('Error extracting data.');
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const map = L.map('map').setView([20, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    fetch('/get-geojson-data')
+        .then(response => response.json())
+        .then(geoJsonData => {
+            L.geoJSON(geoJsonData, {
+                pointToLayer: function (feature, latlng) {
+                    // Define marker style based on the 'currentRate' property
+                    const rate = feature.properties.currentRate;
+                    const markerColor = rate > 5 ? 'red' : 'green'; // Example logic
+
+                    return L.circleMarker(latlng, {
+                        radius: 8,
+                        fillColor: markerColor,
+                        color: 'white',
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    });
+                },
+                onEachFeature: function (feature, layer) {
+                    // Add pop-up information based on the 'country' and 'currentRate' properties
+                    layer.bindPopup(`Country: ${feature.properties.country}<br>Current Rate: ${feature.properties.currentRate}`);
+                }
+            }).addTo(map);
+        })
+        .catch(error => {
+            console.error('Error fetching or visualizing data:', error);
+        });
+});
+
