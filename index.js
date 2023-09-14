@@ -65,7 +65,7 @@ app.get("/positions", async (req, res) => {
 
 const extractInterestRates = require('./gir');
 
-app.post('/extract-rates', async (req, res) => {
+app.post('/extractInterestRates', async (req, res) => {
   try {
       await extractInterestRates();
       res.send('Data extraction successful and saved to CSV!');
