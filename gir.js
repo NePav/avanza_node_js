@@ -1,6 +1,11 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
+const path = require('path');
+const Papa = require('papaparse');
+const fetch = require('node-fetch');
+
+const MAPBOX_API_KEY = 'pk.eyJ1IjoibmVwYXYiLCJhIjoiY2xtamU3ZzdsMDN1bzJxbm92OTY2NnpubSJ9.6ewU3v2rWTX7wa8DWMjn-g'; // Replace with your Mapbox API key
 
 async function extractInterestRates() {
     const url = 'https://www.global-rates.com/en/interest-rates/central-banks/central-banks.aspx';
@@ -55,9 +60,6 @@ async function extractInterestRates() {
     }
 }
 
-const path = require('path');
-const Papa = require('papaparse');
-
 // Function to get the latest CSV file
 function getLatestCSV() {
   const files = fs.readdirSync('./'); // Assuming CSV files are in the root directory
@@ -72,25 +74,28 @@ function parseCSVData(file) {
   return Papa.parse(csvData, { header: true }).data;
 }
 
-function convertToGeoJSON(data) {
+async function convertToGeoJSON(data) {
     const geoJsonData = {
         type: 'FeatureCollection',
         features: []
     };
 
-    // Iterate through your CSV data and create GeoJSON features
-    data.forEach(row => {
-        // Replace 'Latitude' and 'Longitude' with your actual column names if needed
-        const latitude = parseFloat(row['Latitude']);
-        const longitude = parseFloat(row['Longitude']);
+    for (const row of data) {
+        const countryName = row['Country/Region'];
+        const currentRate = parseFloat(row['Current Rate']);
+        const previousRate = parseFloat(row['Previous Rate']);
 
-        if (!isNaN(latitude) && !isNaN(longitude)) {
+        // Use Mapbox Geocoding API to get latitude and longitude for the country
+        const geoData = await geocodeCountry(countryName);
+
+        if (geoData) {
+            const { latitude, longitude } = geoData;
             const feature = {
                 type: 'Feature',
                 properties: {
-                    country: row['Country/Region'],
-                    currentRate: parseFloat(row['Current Rate']),
-                    previousRate: parseFloat(row['Previous Rate'])
+                    country: countryName,
+                    currentRate,
+                    previousRate
                 },
                 geometry: {
                     type: 'Point',
@@ -99,11 +104,34 @@ function convertToGeoJSON(data) {
             };
             geoJsonData.features.push(feature);
         }
-    });
+    }
 
     return geoJsonData;
 }
 
+async function geocodeCountry(countryName) {
+    try {
+        const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${countryName}.json?access_token=${MAPBOX_API_KEY}`);
+        if (response.ok) {
+            const data = await response.json();
+            const feature = data.features[0];
+            if (feature) {
+                const { coordinates } = feature.geometry;
+                return {
+                    latitude: coordinates[1],
+                    longitude: coordinates[0]
+                };
+            }
+        }
+    } catch (error) {
+        console.error('Error geocoding country:', error);
+    }
+    return null;
+}
 
-module.exports = extractInterestRates;
-
+module.exports = {
+    extractInterestRates,
+    getLatestCSV,
+    parseCSVData,
+    convertToGeoJSON,
+};

@@ -1,6 +1,7 @@
 {
   "name": "avanza_node_js",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,6 +16,8 @@
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "mapbox-gl": "^2.15.0",
+    "node-fetch": "^3.3.2",
     "papaparse": "^5.4.1",
     "xmldom": "^0.6.0",
     "xpath": "^0.0.33"
