@@ -45,7 +45,7 @@ document.getElementById("get-positions").addEventListener("click", function() {
       .catch(error => console.error("Error:", error));
 });
 
-document.getElementById('extractButton').addEventListener('click', async () => {
+document.getElementById('extractInterestRates').addEventListener('click', async () => {
     try {
         const response = await fetch('/extract-rates', { method: 'POST' });
         const result = await response.text();
