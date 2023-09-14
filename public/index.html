@@ -88,11 +88,11 @@
     $(document).ready(function () {
       var table = $('#positions').DataTable({
         dom: 'Bfrtip',
-        buttons: [
-          'colvis'
-        ],
+        buttons: ['colvis'],
         colReorder: true,
         stateSave: true,
+        pageLength: -1,  // Display all rows
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],  // Dropdown options for number of rows per page
         columns: [
           { data: 'accountName' },
           { data: 'accountType' },
@@ -128,6 +128,9 @@
       });
     });                                                                                                                                                                                            
   </script>
+  
+  <button id="extractButton">Extract Interest Rates</button>
+  
 </body>
 
 </html>
