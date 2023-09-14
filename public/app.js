@@ -55,37 +55,62 @@ document.getElementById('extractInterestRates').addEventListener('click', async 
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+function populateMap() {
     const map = L.map('map').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    fetch('/get-geojson-data')
-        .then(response => response.json())
-        .then(geoJsonData => {
-            L.geoJSON(geoJsonData, {
-                pointToLayer: function (feature, latlng) {
-                    // Define marker style based on the 'currentRate' property
-                    const rate = feature.properties.currentRate;
-                    const markerColor = rate > 5 ? 'red' : 'green'; // Example logic
+    // Check if GeoJSON data is already stored locally
+    const storedGeoJson = localStorage.getItem('geojson_data');
 
-                    return L.circleMarker(latlng, {
-                        radius: 8,
-                        fillColor: markerColor,
-                        color: 'white',
-                        weight: 1,
-                        opacity: 1,
-                        fillOpacity: 0.8
-                    });
-                },
-                onEachFeature: function (feature, layer) {
-                    // Add pop-up information based on the 'country' and 'currentRate' properties
-                    layer.bindPopup(`Country: ${feature.properties.country}<br>Current Rate: ${feature.properties.currentRate}`);
-                }
-            }).addTo(map);
-        })
-        .catch(error => {
-            console.error('Error fetching or visualizing data:', error);
-        });
+    if (storedGeoJson) {
+        // If data is stored locally, parse and display it
+        const geoJsonData = JSON.parse(storedGeoJson);
+        displayGeoJsonOnMap(map, geoJsonData);
+    } else {
+        // If data is not stored locally, fetch it from the server
+        fetch('/get-geojson-data')
+            .then(response => response.json())
+            .then(geoJsonData => {
+                // Store GeoJSON data locally for future use
+                localStorage.setItem('geojson_data', JSON.stringify(geoJsonData));
+
+                // Display GeoJSON data on the map
+                displayGeoJsonOnMap(map, geoJsonData);
+            })
+            .catch(error => {
+                console.error('Error fetching or visualizing data:', error);
+            });
+    }
+}
+
+function displayGeoJsonOnMap(map, geoJsonData) {
+    L.geoJSON(geoJsonData, {
+        pointToLayer: function (feature, latlng) {
+            // Define marker style based on the 'currentRate' property
+            const rate = feature.properties.currentRate;
+            const markerColor = rate > 5 ? 'red' : 'green'; // Example logic
+
+            return L.circleMarker(latlng, {
+                radius: 8,
+                fillColor: markerColor,
+                color: 'white',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            });
+        },
+        onEachFeature: function (feature, layer) {
+            // Add pop-up information based on the 'country' and 'currentRate' properties
+            layer.bindPopup(`Country: ${feature.properties.country}<br>Current Rate: ${feature.properties.currentRate}`);
+        }
+    }).addTo(map);
+}
+
+document.getElementById('mapDataButton').addEventListener('click', function() {
+    populateMap();
 });
+
+
+  
 
 

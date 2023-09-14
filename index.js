@@ -1,16 +1,18 @@
 // Clear the module cache for 'gir.js'
 delete require.cache[require.resolve('./gir.js')];
 
-import 'dotenv/config'; // Load environment variables
+require('dotenv/config'); // Load environment variables
+const Avanza = require('avanza');
+const express = require('express');
+const {
+  extractInterestRates,
+  getLatestCSV,
+  parseCSVData,
+  convertToGeoJSON
+} = require('./gir.js'); // Import using require
 
-import Avanza from 'avanza';
-const avanza = new Avanza();
-
-import express from 'express';
 const app = express();
 const port = 80;
-
-import fetch from 'node-fetch';
 
 app.get('/', function (req, res) { res.sendFile(__dirname + '/public/index.html'); });
 
@@ -67,13 +69,6 @@ app.get("/positions", async (req, res) => {
     res.sendStatus(500);
   }
 });
-
-import {
-  extractInterestRates,
-  getLatestCSV,
-  parseCSVData,
-  convertToGeoJSON, 
-} from './gir.js';
 
 app.post('/extract-rates', async (req, res) => {
   try {

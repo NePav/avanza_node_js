@@ -7,6 +7,7 @@ const fetch = require('node-fetch');
 
 const MAPBOX_API_KEY = 'pk.eyJ1IjoibmVwYXYiLCJhIjoiY2xtamU3ZzdsMDN1bzJxbm92OTY2NnpubSJ9.6ewU3v2rWTX7wa8DWMjn-g'; // Replace with your Mapbox API key
 
+// Function to extract latest Global Inflation Rates and store them into CSV file
 async function extractInterestRates() {
     const url = 'https://www.global-rates.com/en/interest-rates/central-banks/central-banks.aspx';
     
@@ -74,7 +75,7 @@ function parseCSVData(file) {
   return Papa.parse(csvData, { header: true }).data;
 }
 
-
+// Given the country name retrieve conutrys longitude and latitude to be used on map (Mapbox)
 async function geocodeCountry(countryName) {
     try {
         const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${countryName}.json?access_token=${MAPBOX_API_KEY}`);
@@ -95,6 +96,7 @@ async function geocodeCountry(countryName) {
     return null;
 }
 
+// Convert DATA into GeoJSON format for displaying on the map (Mapbox)
 async function convertToGeoJSON(data) {
     const geoJsonData = {
         type: 'FeatureCollection',
@@ -103,8 +105,10 @@ async function convertToGeoJSON(data) {
 
     for (const row of data) {
         const countryName = row['Country/Region'];
-        const currentRate = parseFloat(row['Current Rate']);
-        const previousRate = parseFloat(row['Previous Rate']);
+       // Generate random two-digit numbers for currentRate and previousRate
+       const currentRate = Math.floor(Math.random() * 90 + 10) / 10; // Random float between 1.0 and 9.9
+       const previousRate = Math.floor(Math.random() * 90 + 10) / 10; // Random float between 1.0 and 9.9
+
 
         // Use Mapbox Geocoding API to get latitude and longitude for the country
         const geoData = await geocodeCountry(countryName);
@@ -126,6 +130,7 @@ async function convertToGeoJSON(data) {
             geoJsonData.features.push(feature);
         }
     }
+    console.log(JSON.stringify(geoJsonData));
 
     return geoJsonData;
 }
@@ -133,6 +138,6 @@ async function convertToGeoJSON(data) {
 module.exports = {
     extractInterestRates,
     getLatestCSV,
-    parseCSVData,
     convertToGeoJSON,
+    parseCSVData
 };
