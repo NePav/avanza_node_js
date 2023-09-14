@@ -74,6 +74,27 @@ function parseCSVData(file) {
   return Papa.parse(csvData, { header: true }).data;
 }
 
+
+async function geocodeCountry(countryName) {
+    try {
+        const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${countryName}.json?access_token=${MAPBOX_API_KEY}`);
+        if (response.ok) {
+            const data = await response.json();
+            const feature = data.features[0];
+            if (feature) {
+                const { coordinates } = feature.geometry;
+                return {
+                    latitude: coordinates[1],
+                    longitude: coordinates[0]
+                };
+            }
+        }
+    } catch (error) {
+        console.error('Error geocoding country:', error);
+    }
+    return null;
+}
+
 async function convertToGeoJSON(data) {
     const geoJsonData = {
         type: 'FeatureCollection',
@@ -107,26 +128,6 @@ async function convertToGeoJSON(data) {
     }
 
     return geoJsonData;
-}
-
-async function geocodeCountry(countryName) {
-    try {
-        const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${countryName}.json?access_token=${MAPBOX_API_KEY}`);
-        if (response.ok) {
-            const data = await response.json();
-            const feature = data.features[0];
-            if (feature) {
-                const { coordinates } = feature.geometry;
-                return {
-                    latitude: coordinates[1],
-                    longitude: coordinates[0]
-                };
-            }
-        }
-    } catch (error) {
-        console.error('Error geocoding country:', error);
-    }
-    return null;
 }
 
 module.exports = {
